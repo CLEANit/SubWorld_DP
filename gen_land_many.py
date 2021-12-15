@@ -16,8 +16,7 @@ maps_f = params['maps_f']
 
 dim = params['dim']
 max_islands = params['max_islands']
-x_size = params['x_size']
-y_size = params['y_size']
+size = params['size']
 min_height = params['min_height']
 max_height = params['max_height']
 x_decay_min = params['x_decay_min']
@@ -33,6 +32,6 @@ if __name__ == "__main__":
     pool = multiprocessing.Pool(processes = n_cpu, initializer=start)
     seeds = list(np.arange(maps_i, maps_f, 1, dtype=np.int32))
     n_islands = np.clip(np.random.normal(0.6*max_islands, 0.25*max_islands, maps_f - maps_i), 0, max_islands).astype(np.int32)
-    pool.starmap(save_chart, zip(seeds, n_islands, repeat(x_size), repeat(y_size), repeat(x_decay_min), repeat(x_decay_max), repeat(y_decay_min), repeat(y_decay_max), repeat(min_height), repeat(max_height), repeat(dim), repeat(max_cur), repeat(path)))
+    pool.starmap(save_chart, zip(seeds, n_islands, repeat(size), repeat(x_decay_min), repeat(x_decay_max), repeat(y_decay_min), repeat(y_decay_max), repeat(min_height), repeat(max_height), repeat(dim), repeat(max_cur), repeat(path)))
     pool.close()
     pool.join()

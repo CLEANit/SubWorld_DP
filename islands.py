@@ -2,16 +2,16 @@ import numpy as np
 from copy import deepcopy
 
 class islandParameter(object):
-    def __init__(self, x_size, y_size, x_decay_min, x_decay_max, y_decay_min, y_decay_max, min_h, max_h):
+    def __init__(self, size, x_decay_min, x_decay_max, y_decay_min, y_decay_max, min_h, max_h):
         self.height = np.random.uniform(low=min_h, high=max_h) # Height parameter
-        self.x0 = np.random.uniform(low=0.0, high=x_size) # x position parameter
-        self.y0 = np.random.uniform(low=0.0, high=y_size) # y position parameter
+        self.x0 = np.random.uniform(low=0.0, high=size) # x position parameter
+        self.y0 = np.random.uniform(low=0.0, high=size) # y position parameter
         self.a = np.random.uniform(low=x_decay_min, high=x_decay_max) # x variance parameter
         self.c = np.random.uniform(low=y_decay_min, high=y_decay_max) # y variance parameter
         b_lim = np.sqrt(self.a*self.c) # Maximum absolute value for co-variance parameter
         self.b = np.random.uniform(low=-1.0*b_lim, high=1.0*b_lim) # Co-variance parameter
 
-def get_height(x_pos, y_pos, island_list, x_size, y_size):
+def get_height(x_pos, y_pos, island_list, size):
     n = len(island_list)
     height = -1.0
     dx_height = np.zeros(n, dtype=np.float32)
@@ -28,26 +28,26 @@ def get_height(x_pos, y_pos, island_list, x_size, y_size):
 
                 height += A * np.exp(
                     -1.0 * (
-                        a * ( (x_pos + x_size * (j-1)) - x0) ** 2.0
-                        + 2.0 * b * ((x_pos + x_size * (j-1))  - x0) * ( (y_pos + y_size * (k-1)) - y0)
-                        + c * ( (y_pos + y_size * (k-1)) - y0) ** 2
+                        a * ( (x_pos + size * (j-1)) - x0) ** 2.0
+                        + 2.0 * b * ((x_pos + size * (j-1))  - x0) * ( (y_pos + size * (k-1)) - y0)
+                        + c * ( (y_pos + size * (k-1)) - y0) ** 2
                     )
                 )
 
-                dx_height[i] += A * -1.0 * (2.0 * a * (x_pos + x_size * (j-1) - x0) + b * (y_pos + y_size * (k-1) - y0)) * np.exp(-1.0 * (a * ( (x_pos + x_size * (j-1)) - x0) ** 2.0 + 2.0 * b * ((x_pos + x_size * (j-1))  - x0) * ((y_pos + y_size * (k-1)) - y0) + c * ((y_pos + y_size * (k-1)) - y0) ** 2))
+                dx_height[i] += A * -1.0 * (2.0 * a * (x_pos + size * (j-1) - x0) + b * (y_pos + size * (k-1) - y0)) * np.exp(-1.0 * (a * ( (x_pos + size * (j-1)) - x0) ** 2.0 + 2.0 * b * ((x_pos + size * (j-1))  - x0) * ((y_pos + size * (k-1)) - y0) + c * ((y_pos + size * (k-1)) - y0) ** 2))
 
-                dy_height[i] += A * -1.0 * (2.0 * c * (y_pos + y_size * (k-1) - y0) + b * (x_pos + x_size * (j-1) - x0)) * np.exp(-1.0 * (a * ( (x_pos + x_size * (j-1)) - x0) ** 2.0 + 2.0 * b * ((x_pos + x_size * (j-1))  - x0) * ((y_pos + y_size * (k-1)) - y0) + c * ((y_pos + y_size * (k-1)) - y0) ** 2))
+                dy_height[i] += A * -1.0 * (2.0 * c * (y_pos + size * (k-1) - y0) + b * (x_pos + size * (j-1) - x0)) * np.exp(-1.0 * (a * ( (x_pos + size * (j-1)) - x0) ** 2.0 + 2.0 * b * ((x_pos + size * (j-1))  - x0) * ((y_pos + size * (k-1)) - y0) + c * ((y_pos + size * (k-1)) - y0) ** 2))
 
     return height, dx_height, dy_height
 
-def gen_chart(dim, islands, x_size, y_size, max_cur):
+def gen_chart(dim, islands, size, max_cur):
     n_islands = len(islands)
     chart = np.zeros((dim, dim), dtype=np.float32)
     water_c = np.zeros((dim, dim, 2))
     water_cs = np.zeros((n_islands, dim, dim, 2))
     for i in range(dim):
         for j in range(dim):
-            height, dx_height, dy_height = get_height((i+0.5)*x_size/dim, (j+0.5)*y_size/dim, islands, x_size, y_size)
+            height, dx_height, dy_height = get_height((i+0.5)*size/dim, (j+0.5)*size/dim, islands, size)
             chart[i, j] += height
 
             for n in range(n_islands):
@@ -84,12 +84,12 @@ def gen_chart(dim, islands, x_size, y_size, max_cur):
 
     return chart, water_c
 
-def save_chart(seed, n_islands, x_size, y_size, x_decay_min, x_decay_max, y_decay_min, y_decay_max, min_height, max_height, dim, max_cur, path):
+def save_chart(seed, n_islands, size, x_decay_min, x_decay_max, y_decay_min, y_decay_max, min_height, max_height, dim, max_cur, path):
     np.random.seed(seed)
     islands = []
     for i in range(n_islands):
-        islands.append(islandParameter(x_size, y_size, x_decay_min, x_decay_max, y_decay_min, y_decay_max, min_height, max_height))
+        islands.append(islandParameter(size, x_decay_min, x_decay_max, y_decay_min, y_decay_max, min_height, max_height))
 
-    chart, water_c = gen_chart(dim, islands, x_size, y_size, max_cur)
+    chart, water_c = gen_chart(dim, islands, size, max_cur)
 
     np.savez(path + '/data/charts/charts_' + str(seed) + '.npz', chart=chart, water_c=water_c)
