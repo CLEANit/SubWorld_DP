@@ -57,4 +57,4 @@ def gen_value(path, seed, dim, target_x, target_y, size, tol, n_h, n_t, discount
 
     chart_value -= 1
 
-    return chart_value
+    return chart_value, steps
