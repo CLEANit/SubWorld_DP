@@ -1,17 +1,24 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import cmocean
+import yaml
+from os import getcwd
 
-seed = 2525
-n_t = 5
+path = getcwd()
 
-data = np.load('./SubWorld_DP/data/charts/charts_' + str(seed) + '.npz', allow_pickle=True)
+with open(path + '/params.yaml', 'r') as F:
+    params = yaml.safe_load(F)
+
+seed = params['seed']
+n_t = params['n_t']
+
+data = np.load(path + '/data/charts/charts_' + str(seed) + '.npz', allow_pickle=True)
 chart = data['chart']
 dim = chart.shape[0]
 water_p = np.meshgrid(np.arange(0, dim, 3), np.arange(0, dim, 3))
 current = data['water_c']
 water_c = current[0::3, 0::3]
-data1 = np.load('./SubWorld_DP/data/policy/policy_gps_' + str(seed) + '.npz')
+data1 = np.load(path + '/data/policy/policy_gps_' + str(seed) + '.npz')
 pos = data1['pos']
 pos_est = data1['pos_est']
 no_gps = data1['no_gps']
@@ -39,4 +46,4 @@ _plot_axs.set_xticks([])
 _plot_axs.set_yticks([])
 _plot_axs.set_xlim([0, dim])
 _plot_axs.set_ylim([0, dim])
-plt.savefig('./SubWorld_DP/PDFs/policy/policy_gps_' + str(seed) + '.pdf')
+plt.savefig(path + '/PDFs/policy/policy_gps_' + str(seed) + '.pdf')

@@ -1,15 +1,25 @@
 import numpy as np
 from copy import deepcopy
 import multiprocessing
+import yaml
+from os import getcwd
 
-n_cpu = 48
-maps_i = 0
-maps_f = 50000
-size = 10.0
-discount = 0.99
+path = getcwd()
+
+with open(path + '/params.yaml', 'r') as F:
+    params = yaml.safe_load(F)
+
+n_cpu = params['n_cpu']
+maps_i = params['maps_i']
+maps_f = params['maps_f']
+size = params['size']
+discount = params['discount']
+tol = 10 ** params['tol']
+n_t = params['n_t']
+n_h = params['n_h']
 
 def gen_value(seed):
-    data = np.load('./SubWorld_DP/data/charts/charts_' + str(seed) + '.npz')
+    data = np.load(path + '/data/charts/charts_' + str(seed) + '.npz')
     chart = data['chart']
     dim = chart.shape[0]
     water_c = np.zeros((dim, dim, 2), dtype=np.float32)
@@ -26,12 +36,8 @@ def gen_value(seed):
             elif np.sqrt(((i + 0.5)/dim - target[0])**2 + ((j + 0.5)/dim - target[1])**2) < 0.3/size:
                 chart_value[i, j] = 2
 
-    tol = 1e-6
     dif_chart = np.zeros((dim, dim), dtype=np.float32) + 100
     dif = 100
-
-    n_t = 5
-    n_h = 16
 
     count = 0
 
@@ -59,11 +65,10 @@ def gen_value(seed):
 
         dif_chart = abs(old_value - chart_value)
         dif = np.mean(dif_chart)
-        print(dif)
-
+        
     chart_value -= 1
 
-    np.savez('./SubWorld_DP/data/value/value_' + str(seed) + '.npz', value = chart_value, steps = steps, discount = discount)
+    np.savez(path + '/data/value/value_' + str(seed) + '.npz', value = chart_value, steps = steps, discount = discount)
 
 def start():
     print('Starting', multiprocessing.current_process().name)

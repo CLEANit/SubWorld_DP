@@ -1,20 +1,29 @@
 import numpy as np
 from copy import deepcopy
+import yaml
+from os import getcwd
 
-seed = 25
-n_islands = 20
+path = getcwd()
 
-x_size = 10.0
-y_size = 10.0
-min_height = 0.9
-max_height = 2.0
-x_decay_min = 1.5
-x_decay_max = 3.0
-y_decay_min = 1.5
-y_decay_max = 3.0
-dim = 152
-max_islands = 20
-max_cur = 0.5
+with open(path + '/params.yaml', 'r') as F:
+    params = yaml.safe_load(F)
+
+seed = params['seed']
+dim = params['dim']
+n_islands = params['seed']
+if n_islands == None:
+    max_islands = params['max_islands']
+    n_islands = np.clip(np.random.normal(0.6*max_islands, 0.25*max_islands), 0, max_islands).astype(np.int32)
+
+x_size = params['x_size']
+y_size = params['y_size']
+min_height = params['min_height']
+max_height = params['max_height']
+x_decay_min = params['x_decay_min']
+x_decay_max = params['y_decay_max']
+y_decay_min = params['y_decay_min']
+y_decay_max = params['y_decay_max']
+max_cur = params['max_cur']
 
 class islandParameter(object):
     def __init__(self, x_size, y_size, min_h, max_h):
@@ -100,4 +109,4 @@ for i in range(dim):
         if chart[i, j] > -0.1:
             water_c[i, j] = 0.0
 
-np.savez('./SubWorld_DP/data/charts/charts_' + str(seed) + '.npz', chart=chart, water_c=water_c)
+np.savez(path + '/data/charts/charts_' + str(seed) + '.npz', chart=chart, water_c=water_c)

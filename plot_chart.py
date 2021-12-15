@@ -1,10 +1,17 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import cmocean
+import yaml
+from os import getcwd
 
-seed = 25
+path = getcwd()
 
-data = np.load('./SubWorld_DP/data/charts/charts_' + str(seed) + '.npz', allow_pickle=True)
+with open(path + '/params.yaml', 'r') as F:
+    params = yaml.safe_load(F)
+
+seed = params['seed']
+
+data = np.load(path + '/data/charts/charts_' + str(seed) + '.npz', allow_pickle=True)
 chart = data['chart']
 dim = chart.shape[0]
 water_p = np.meshgrid(np.arange(0, dim, 3), np.arange(0, dim, 3))

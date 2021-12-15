@@ -1,22 +1,30 @@
 import numpy as np
 from copy import deepcopy
 import multiprocessing
+import yaml
+from os import getcwd
 
-n_cpu = 48
-maps_i = 0
-maps_f = 50000
+path = getcwd()
 
-x_size = 10.0
-y_size = 10.0
-min_height = 0.9
-max_height = 2.0
-x_decay_min = 1.5
-x_decay_max = 3.0
-y_decay_min = 1.5
-y_decay_max = 3.0
-dim = 152
-max_islands = 20
-max_cur = 0.5
+with open(path + '/params.yaml', 'r') as F:
+    params = yaml.safe_load(F)
+
+n_cpu = params['n_cpu']
+maps_i = params['maps_i']
+maps_f = params['maps_f']
+
+seed = params['seed']
+dim = params['dim']
+max_islands = params['max_islands']
+x_size = params['x_size']
+y_size = params['y_size']
+min_height = params['min_height']
+max_height = params['max_height']
+x_decay_min = params['x_decay_min']
+x_decay_max = params['y_decay_max']
+y_decay_min = params['y_decay_min']
+y_decay_max = params['y_decay_max']
+max_cur = params['max_cur']
 
 class islandParameter(object):
     def __init__(self, x_size, y_size, min_h, max_h):
@@ -103,7 +111,7 @@ def gen_chart(seed, n_island):
             if chart[i, j] > -0.1:
                 water_c[i, j] = 0.0
 
-    np.savez('./SubWorld_DP/data/charts/charts_' + str(seed) + '.npz', chart=chart, water_c=water_c)
+    np.savez(path + '/data/charts/charts_' + str(seed) + '.npz', chart=chart, water_c=water_c)
 
 def start():
     print('Starting', multiprocessing.current_process().name)
@@ -111,7 +119,7 @@ def start():
 if __name__ == "__main__":
     pool = multiprocessing.Pool(processes = n_cpu, initializer=start)
     seeds = list(np.arange(maps_i, maps_f, 1, dtype=np.int32))
-    n_islands = np.clip(np.random.normal(12, 5, maps_f - maps_i), 0, 20).astype(np.int32)
+    n_islands = np.clip(np.random.normal(0.6*max_islands, 0.25*max_islands, maps_f - maps_i), 0, max_islands).astype(np.int32)
     pool.starmap(gen_chart, zip(seeds, n_islands))
     pool.close()
     pool.join()

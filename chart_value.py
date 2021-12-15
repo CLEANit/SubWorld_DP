@@ -1,16 +1,34 @@
 import numpy as np
 from copy import deepcopy
+import yaml
+from os import getcwd
 
-dim = 152
-seed = 25
-size = 10.0
-discount = 0.99
-data = np.load('./SubWorld_DP/data/charts/charts_' + str(seed) + '.npz')
+path = getcwd()
+
+with open(path + '/params.yaml', 'r') as F:
+    params = yaml.safe_load(F)
+
+seed = params['seed']
+dim = params['dim']
+size = params['size']
+discount = params['discount']
+tol = 10 ** params['tol']
+n_t = params['n_t']
+n_h = params['n_h']
+
+data = np.load(path + '/data/charts/charts_' + str(seed) + '.npz')
 chart = data['chart']
 water_c = np.zeros((dim, dim, 2), dtype=np.float32)
 steps = np.zeros((dim, dim), dtype=np.int32)
 
-target = np.array([49, 103]) / dim
+try:
+    target = np.array([params['target_x'], params['target_y']]) / dim
+except TypeError:
+    place = False
+    while not place:
+        target = np.random.rand(2) * dim
+        if chart[int(target[0]), int(target[1])] < -0.1:
+            place = True
 
 chart_value = np.zeros((dim, dim), dtype=np.float32) + 1
 for i in range(dim):
@@ -21,12 +39,8 @@ for i in range(dim):
         elif np.sqrt(((i + 0.5)/dim - target[0])**2 + ((j + 0.5)/dim - target[1])**2) < 0.3/size:
             chart_value[i, j] = 2
 
-tol = 1e-6
 dif_chart = np.zeros((dim, dim), dtype=np.float32) + 100
 dif = 100
-
-n_t = 5
-n_h = 16
 
 count = 0
 
@@ -57,4 +71,4 @@ while dif > tol:
 
 chart_value -= 1
 
-np.savez('./SubWorld_DP/data/value/value_' + str(seed) + '.npz', value = chart_value, steps = steps, discount = discount)
+np.savez(path + '/data/value/value_' + str(seed) + '.npz', value = chart_value, steps = steps, discount = discount)

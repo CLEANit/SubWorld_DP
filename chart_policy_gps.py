@@ -1,32 +1,39 @@
 import numpy as np
 from copy import deepcopy
+import yaml
+from os import getcwd
 
-seed = 2525
-size = 10.0
-n_t = 5
-n_h = 16
-n_steps = 75
-gps_cost = 0.0
-uncert_i = 0.2
-uncert_inc = 0.1
+path = getcwd()
 
-data1 = np.load('./SubWorld_DP/data/value/value_' + str(seed) + '.npz')
+with open(path + '/params.yaml', 'r') as F:
+    params = yaml.safe_load(F)
+
+seed = params['seed']
+size = params['size']
+n_t = params['n_t']
+n_h = params['n_h']
+n_steps = params['n_steps']
+gps_cost = params['gps_cost']
+uncert_i = params['uncert_i']
+uncert_inc = params['uncert_inc']
+target = params['target']
+
+data1 = np.load(path + '/data/value/value_' + str(seed) + '.npz')
 chart_value = data1['value']
 steps_est = data1['steps']
 discount = float(data1['discount'])
-data = np.load('./SubWorld_DP/data/charts/charts_' + str(seed) + '.npz')
+data = np.load(path + '/data/charts/charts_' + str(seed) + '.npz')
 chart = data['chart']
 dim = chart.shape[0]
 
-target = np.array([49, 103]) / dim
-
-place = False
-while not place:
-    sub = np.random.rand(2)
-    if chart_value[int(dim*sub[0]), int(dim*sub[1])] > -1 + 1e-6:
-        place = True
-
-#sub = np.array([97, 93]) / dim
+try:
+    sub = np.array([params['sub_x'], params['sub_y']]) / dim
+except TypeError:
+    place = False
+    while not place:
+        sub = np.random.rand(2)
+        if chart_value[int(dim*sub[0]), int(dim*sub[1])] > -1 + 1e-6:
+            place = True
 
 water = data['water_c']
 water_p = np.meshgrid(np.arange(0, dim+1, 3), np.arange(0, dim+1, 3))
@@ -134,4 +141,4 @@ while not done:
         print('Finished after %d steps.' % (i+1))
         done = True
 
-np.savez('./SubWorld_DP/data/policy/policy_gps_' + str(seed) + '.npz', pos = pos[:(i+1)*n_t], pos_est = pos_est[:i+1], no_gps = no_gps[1:])
+np.savez(path + '/data/policy/policy_gps_' + str(seed) + '.npz', pos = pos[:(i+1)*n_t], pos_est = pos_est[:i+1], no_gps = no_gps[1:])
