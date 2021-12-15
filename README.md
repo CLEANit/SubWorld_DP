@@ -8,7 +8,7 @@ This repository conatins the code required to create SubWorld:
 
 ## Generating Charts
 
-Running **gen_land_det.py** will generate a single chart with water currents stored in **data/charts/charts_SEED.npz**. Running **gen_land_many.py** will generate many charts with water currents stored in **data/charts/charts_SEED.npz**. These charts are generated in parallel using _multiprocessing_.
+Running **gen_land.py** will generate a single chart with water currents stored in **data/charts/charts_SEED.npz**. Running **gen_land_many.py** will generate many charts with water currents stored in **data/charts/charts_SEED.npz**. These charts are generated in parallel using _multiprocessing_.
 
 The charts and water currents can be visualized using **plot_chart.py**.
 
@@ -42,8 +42,7 @@ The parameters used in each task are stored in **params.yaml**. Some parameters 
 |dim         |The dimension size of the chart.
 |n_islands   |The number of islands that will be generated. Setting **None** will result in a random number of islands. |
 |max_islands |The maximum number of islands that will be generated if **n_islands** is **None**. |
-|x_size      |The size of the x dimension of the chart. The Submarine can move up to 1 unit per action. |
-|y_size      |The size of the y dimension of the chart. The Submarine can move up to 1 unit per action. |
+|size        |The size of the x and y dimensions of the chart. The Submarine can move up to 1 unit per action. |
 |min_height  |The minimum height of each island. |
 |max_height  |The maximum height of each island. |
 |x_decay_min |The minimum decay rate in the x direction of each island. |
