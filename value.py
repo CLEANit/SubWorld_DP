@@ -12,8 +12,8 @@ def gen_value(path, seed, dim, target_x, target_y, size, tol, n_h, n_t, discount
     except TypeError:
         place = False
         while not place:
-            target = np.random.rand(2) * dim
-            if chart[int(target[0]), int(target[1])] < -0.1:
+            target = np.random.rand(2)
+            if chart[int(target[0]*dim), int(target[1]*dim)] < -0.1:
                 place = True
 
     chart_value = np.zeros((dim, dim), dtype=np.float32) + 1
