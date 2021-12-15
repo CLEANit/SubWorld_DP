@@ -36,47 +36,47 @@ The parameters used in each task are stored in **params.yaml**. Some parameters 
 
 ### Generating Charts
 
-|Parameter   |Description |
-|------------|------------|
-|seed        |The random seed used create the islands that define the chart. |
-|dim         |The dimension size of the chart.
-|n_islands   |The number of islands that will be generated. Setting **None** will result in a random number of islands. |
-|max_islands |The maximum number of islands that will be generated if **n_islands** is **None**. |
-|size        |The size of the x and y dimensions of the chart. The Submarine can move up to 1 unit per action. |
-|min_height  |The minimum height of each island. |
-|max_height  |The maximum height of each island. |
-|x_decay_min |The minimum decay rate in the x direction of each island. |
-|x_decay_max |The maximum decay rate in the x direction of each island. |
-|y_decay_min |The minimum decay rate in the y direction of each island. |
-|y_decay_max |The maximum decay rate in the y direction of each island. |
-|max_cur     |The maximum water current magnitude. |
+|Parameter   |Type        |Description |
+|------------|------------|------------|
+|seed        |Non-negative **int** |The random seed used create the islands that define the chart. |
+|dim         |Positive **int** |The dimension size of the chart. |
+|n_islands   |Non-negative **int** or **None**| The number of islands that will be generated. Setting **None** will result in a random number of islands. |
+|max_islands |Non-negative **int** |The maximum number of islands that will be generated if **n_islands** is **None**. |
+|size        |Non-negative **float** |The size of the x and y dimensions of the chart. The Submarine can move up to 1 unit per action. |
+|min_height  |Non-negative **float** |The minimum height of each island. |
+|max_height  |Positive **float** > min_height |The maximum height of each island. |
+|x_decay_min |Positive **float** |The minimum decay rate in the x direction of each island. |
+|x_decay_max |Positive **float** > x_decay_min |The maximum decay rate in the x direction of each island. |
+|y_decay_min |Positive **float** |The minimum decay rate in the y direction of each island. |
+|y_decay_max |Positive **float** > y_decay_min |The maximum decay rate in the y direction of each island. |
+|max_cur     |Non-negative **float** |The maximum water current magnitude. |
 
 ### Value Function Generation
 
-|Parameter   |Description |
-|------------|------------|
-|target_x    |The x coordinate of the target. |
-|target_y    |The y coordinate of the target. |
-|discount    |The discount factor used in Bellman's dynamic programming algorithm. |
-|n_t         |The number of discretized throttle actions. |
-|n_h         |The number of discritized heading actions. |
-|tol         |Log base 10 of the convergence tolerence used in Bellman's dynamic programming algorithm. I.e. tol=-6 -> a tolerence of 1e-6.|
+|Parameter   |Type        |Description |
+|------------|------------|------------|
+|target_x    |Non-negative **float** < dim |The x coordinate of the target. |
+|target_y    |Non-negative **float** < dim |The y coordinate of the target. |
+|discount    |Non-negative **float** < 1 |The discount factor used in Bellman's dynamic programming algorithm. |
+|n_t         |Positive **int** |The number of discretized throttle actions. |
+|n_h         |Positive **int** |The number of discritized heading actions. |
+|tol         |**float** |Log base 10 of the convergence tolerence used in Bellman's dynamic programming algorithm. I.e. tol=-6 -> a tolerence of 1e-6.|
 
 ### Extra Paramters for Parallelization
 
-|Parameter   |Description |
-|------------|------------|
-|n_cpu       |The number of CPUs used in **multiprocessing.Pool** when generating many charts/value functions. |
-|maps_i      |The seed to start at when generating many charts. |
-|maps_f      |The seed to end at when generating many charts.
+|Parameter   |Type        |Description |
+|------------|------------|------------|
+|n_cpu       |Positive **int** |The number of CPUs used in **multiprocessing.Pool** when generating many charts/value functions. |
+|maps_i      |Non-negative **int** |The seed to start at when generating many charts. |
+|maps_f      |Positive **int** > maps_i |The seed to end at when generating many charts.
 
 ### Policy Generation
 
-|Parameter   |Description |
-|------------|------------|
-|sub_x       |The x coordinate for the submarine's starting position. Setting **None** will result in a random coordinate. |
-|sub_y       |The y coordinate for the submarine's starting position. Setting **None** will result in a random coordinate. |
-|n_steps     |The maximum number of steps the agent can take before the episode ending. |
-|gps_cost    |The cost required to use the GPS. If set to zero, the GPS will be used at every step. If set 2.0, the GPS will never be used. |
-|uncert_i    |The uncertainty in water current/position after the GPS is used. |
-|uncert_inc  |The rate the uncertainty increases after each step the GPS is not used. |
+|Parameter   |Type        |Description |
+|------------|------------|------------|
+|sub_x       |Non-negative **float** < dim |The x coordinate for the submarine's starting position. Setting **None** will result in a random coordinate. |
+|sub_y       |Non-negative **float** < dim |The y coordinate for the submarine's starting position. Setting **None** will result in a random coordinate. |
+|n_steps     |Positive **int** |The maximum number of steps the agent can take before the episode ending. |
+|gps_cost    |Non-negative **float** < 2 |The cost required to use the GPS. If set to zero, the GPS will be used at every step. If set 2.0, the GPS will never be used. |
+|uncert_i    |Non-negative **float** |The uncertainty in water current/position after the GPS is used. |
+|uncert_inc  |Non-negative **float** |The rate the uncertainty increases after each step the GPS is not used. |
