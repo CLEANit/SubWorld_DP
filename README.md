@@ -55,8 +55,8 @@ The parameters used in each task are stored in **params.yaml**. Some parameters 
 
 |Parameter   |Type        |Description |
 |------------|------------|------------|
-|target_x    |Non-negative **float** < dim |The x coordinate of the target. |
-|target_y    |Non-negative **float** < dim |The y coordinate of the target. |
+|target_x    |Non-negative **float** < dim or **None**|The x coordinate of the target. |
+|target_y    |Non-negative **float** < dim or **None**|The y coordinate of the target. |
 |discount    |Non-negative **float** < 1 |The discount factor used in Bellman's dynamic programming algorithm. |
 |n_t         |Positive **int** |The number of discretized throttle actions. |
 |n_h         |Positive **int** |The number of discritized heading actions. |
@@ -74,8 +74,8 @@ The parameters used in each task are stored in **params.yaml**. Some parameters 
 
 |Parameter   |Type        |Description |
 |------------|------------|------------|
-|sub_x       |Non-negative **float** < dim |The x coordinate for the submarine's starting position. Setting **None** will result in a random coordinate. |
-|sub_y       |Non-negative **float** < dim |The y coordinate for the submarine's starting position. Setting **None** will result in a random coordinate. |
+|sub_x       |Non-negative **float** < dim or **None**|The x coordinate for the submarine's starting position. Setting **None** will result in a random coordinate. |
+|sub_y       |Non-negative **float** < dim or **None**|The y coordinate for the submarine's starting position. Setting **None** will result in a random coordinate. |
 |n_steps     |Positive **int** |The maximum number of steps the agent can take before the episode ending. |
 |gps_cost    |Non-negative **float** < 2 |The cost required to use the GPS. If set to zero, the GPS will be used at every step. If set 2.0, the GPS will never be used. |
 |uncert_i    |Non-negative **float** |The uncertainty in water current/position after the GPS is used. |
