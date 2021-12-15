@@ -8,7 +8,7 @@ This repository conatins the code required to create SubWorld:
 
 ## Generating Charts
 
-Running **gen_land.py** will generate a single chart with water currents stored in **data/charts/charts_SEED.npz**. Running **gen_land_many.py** will generate many charts with water currents stored in **data/charts/charts_SEED.npz**. These charts are generated in parallel using _multiprocessing_.
+Running **gen_land.py** will generate a single chart with water currents stored in **data/charts/charts_SEED.npz**. Running **gen_land_many.py** will generate many charts with water currents stored in **data/charts/charts_SEED.npz**. These charts are generated in parallel using **multiprocessing**.
 
 The charts and water currents can be visualized using **plot_chart.py**.
 
