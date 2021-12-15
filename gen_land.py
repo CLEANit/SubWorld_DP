@@ -10,8 +10,8 @@ with open(path + '/params.yaml', 'r') as F:
 
 seed = params['seed']
 dim = params['dim']
-n_islands = params['seed']
-if n_islands == None:
+n_islands = params['n_islands']
+if n_islands == 'None':
     max_islands = params['max_islands']
     n_islands = np.clip(np.random.normal(0.6*max_islands, 0.25*max_islands), 0, max_islands).astype(np.int32)
 
