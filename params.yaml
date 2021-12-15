@@ -1,7 +1,7 @@
 # Yaml file for SubWorld_DP
 
 # Parameters for chart generation
-seed: 25
+seed: 2525
 dim: 152
 n_islands: 20
 max_islands: 20
