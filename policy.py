@@ -56,9 +56,8 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
             if chart_value[int(dim*sub[0]), int(dim*sub[1])] > -1 + 1e-6:
                 place = True
 
-    #water = data['water_c']
-    water = np.zeros((dim, dim, 2), dtype = np.float32) + 0.1
-
+    water = data['water_c']
+    
     pos = np.zeros((n_steps*n_t+1, 2), dtype=np.float32)
     pos_est = np.zeros((n_steps+1, 2), dtype=np.float32)
     pos[0] = deepcopy(sub)
@@ -86,7 +85,6 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
             unc_cur = uncert_cur * (last_gps + 1)
             last_gps = 0
             current_e = sub - dead_rec
-            print(sub, dead_rec)
             pos_est[i] = deepcopy(sub)
             dead_rec = deepcopy(sub)
             if current_e[0] > 0.5:
@@ -99,7 +97,6 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
                 current_e[1] += 1.0
 
             current_e *= np.array([-1.0*size, size])
-            print(water[int(sub[0]*dim), int(sub[1]*dim)], current_e)
         
             values, rel_values = est_value(n_h, n_t, unc_pos, unc_cur, pos_est[i], dim, current_e, size, chart_value, rel_chart_value, uncert_cur, max_cur)
             v_est = rel_values[np.unravel_index(values.argmax(), values.shape)]
@@ -118,8 +115,7 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
             unc_pos += uncert_pos
             unc_cur += uncert_cur
 
-        #action = np.unravel_index(values.argmax(), values.shape)
-        action = (0, 1)
+        action = np.unravel_index(values.argmax(), values.shape)
         for m in range(n_t):
             current = water[int(sub[0]*dim), int(sub[1]*dim)]
             sub[0] -= ((action[1] * np.cos(2 * np.pi * action[0] / n_h + np.pi / 2)) + n_t * current[0]) / (size * n_t ** 2)
@@ -136,8 +132,6 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
         dead_rec[0] -= (action[1] * np.cos(2 * np.pi * action[0] / n_h + np.pi / 2)) / (size * n_t)
         dead_rec[1] += (action[1] * np.sin(2 * np.pi * action[0] / n_h + np.pi / 2)) / (size * n_t)
         pos_est %= 1
-
-        #print(i, chart_value[int(sub[0]*dim), int(sub[1]*dim)], v_est)
 
         if chart_value[int(sub[0]*dim), int(sub[1]*dim)] > 1 - 1e-6:
             print('Succeeded after %d steps.' % (i+1))
