@@ -43,7 +43,6 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
     data1 = np.load(path + '/data/value/value_' + str(seed) + '.npz')
     chart_value = data1['value']
     rel_chart_value = data1['rel_value']
-    discount = float(data1['discount'])
     data = np.load(path + '/data/charts/charts_' + str(seed) + '.npz')
     chart = data['chart']
     dim = chart.shape[0]
@@ -75,7 +74,7 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
     while not done:
         i += 1
         no_measure = True
-        values, rel_values = est_value(n_h, n_t, unc_pos, unc_cur, pos_est, dim, current_e, size, chart_value, rel_chart_value, uncert_cur, max_cur)
+        values, rel_values = est_value(n_h, n_t, unc_pos, unc_cur, pos_est[i], dim, current_e, size, chart_value, rel_chart_value, uncert_cur, max_cur)
         v_est = rel_values[np.unravel_index(values.argmax(), values.shape)]
 
         if (v_est < 2.0 - gps_cost and i != 0) or chart_value[int(pos_est[i, 0]*dim) % dim, int(pos_est[i, 1]*dim) % dim] > 1 - 1e-6:
@@ -97,7 +96,7 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
 
             current_e *= np.array([size, -1.0*size])
         
-            values, rel_values = est_value(n_h, n_t, unc_pos, unc_cur, pos_est, dim, current_e, size, chart_value, rel_chart_value, uncert_cur, max_cur)
+            values, rel_values = est_value(n_h, n_t, unc_pos, unc_cur, pos_est[i], dim, current_e, size, chart_value, rel_chart_value, uncert_cur, max_cur)
             v_est = rel_values[np.unravel_index(values.argmax(), values.shape)]
    
         if (v_est < 2.0 - cur_cost and i != 0):
@@ -106,7 +105,7 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
             current_e = water[int(sub[0]*dim), int(sub[1]*dim)]
             unc_cur = 0.0
 
-            values, rel_values = est_value(n_h, n_t, unc_pos, unc_cur, pos_est, dim, current_e, size, chart_value, rel_chart_value, uncert_cur, max_cur)
+            values, rel_values = est_value(n_h, n_t, unc_pos, unc_cur, pos_est[i], dim, current_e, size, chart_value, rel_chart_value, uncert_cur, max_cur)
 
         if no_measure:
             print('No Measurement')

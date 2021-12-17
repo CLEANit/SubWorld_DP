@@ -12,12 +12,12 @@ seed = params['seed']
 
 data = np.load(path + '/data/value/value_' + str(seed) + '.npz', allow_pickle=True)
 value = data['value']
-steps = data['steps']
+rel_value = data['rel_value']
 dim = value.shape[0]
 
 _plot_fig, _plot_axs = plt.subplots(1, 1, figsize=(8, 8))
 _plot_lines = []
-mappable = _plot_axs.pcolormesh(value.transpose(), vmin=0.5, vmax=1.0, cmap='RdYlGn')
+mappable = _plot_axs.pcolormesh(value.transpose(), vmin=-1, vmax=1.0, cmap='RdYlGn')
 _plot_axs.set_xticks([])
 _plot_axs.set_yticks([])
 _plot_axs.set_xlim([0, dim])
@@ -26,9 +26,9 @@ plt.savefig(path + '/PDFs/value/value_' + str(seed) + '.pdf')
 
 _plot_fig, _plot_axs = plt.subplots(1, 1, figsize=(8, 8))
 _plot_lines = []
-mappable = _plot_axs.pcolormesh(steps.transpose(), vmin=0, vmax=steps.max(), cmap='RdYlGn')
+mappable = _plot_axs.pcolormesh(rel_value.transpose(), vmin=0.9, vmax=1.0, cmap='RdYlGn')
 _plot_axs.set_xticks([])
 _plot_axs.set_yticks([])
 _plot_axs.set_xlim([0, dim])
 _plot_axs.set_ylim([0, dim])
-plt.savefig(path + '/PDFs/value/steps_' + str(seed) + '.pdf')
+plt.savefig(path + '/PDFs/value/rel_value_' + str(seed) + '.pdf')
