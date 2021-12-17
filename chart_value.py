@@ -18,6 +18,6 @@ tol = 10 ** params['tol']
 n_t = params['n_t']
 n_h = params['n_h']
 
-chart_value, steps = gen_value(path, seed, dim, target_x, target_y, size, tol, n_h, n_t, discount)
+chart_value, rel_chart_value = gen_value(path, seed, dim, target_x, target_y, size, tol, n_h, n_t, discount)
 
-np.savez(path + '/data/value/value_' + str(seed) + '.npz', value = chart_value, steps = steps, discount = discount)
+np.savez(path + '/data/value/value_' + str(seed) + '.npz', value = chart_value, rel_value = rel_chart_value, discount = discount)
