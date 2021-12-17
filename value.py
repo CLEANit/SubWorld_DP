@@ -49,8 +49,8 @@ def gen_value(path, seed, dim, target_x, target_y, size, tol, n_h, n_t, discount
                                 current = water_c[int(i + ind1) % dim, int(j + ind2) % dim]
                                 ind1 += dim * ((l * np.cos(2 * np.pi * k / n_h) + n_t * current[0]) / (size * n_t ** 2))
                                 ind2 += dim * ((l * np.sin(2 * np.pi * k / n_h) + n_t * current[1]) / (size * n_t ** 2))
-                                values[k, l] = old_value[int(i + ind1) % dim, int(j + ind2) % dim] - 0.01 * l / n_t
-                                rel_values[k, l] = old_rel_value[int(i + ind1) % dim, int(j + ind2) % dim] - 0.01 * l / n_t
+                                values[k, l] = old_value[int(i + ind1) % dim, int(j + ind2) % dim] - 0.001 * l / n_t
+                                rel_values[k, l] = old_rel_value[int(i + ind1) % dim, int(j + ind2) % dim] - 0.001 * l / n_t
                                 if values[k, l] < 1e-6:
                                     break
                     

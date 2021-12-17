@@ -9,9 +9,9 @@ def sim_action(x, y, dim, n_h, n_t, action, current, size, chart_value, rel_char
     l = action[1]
     for m in range(n_t):
         ind1 += dim * ((l * np.cos(2 * np.pi * k / n_h + np.pi/2) + n_t * np.clip(current[0] + m * uncert_cur_x, -1.0*max_cur, max_cur)) / (size * n_t ** 2))
-        ind2 += dim * ((l * np.sin(2 * np.pi * k / n_h + np.pi/2) + n_t * current[1] + m * uncert_cur_y) / (size * n_t ** 2))
-        value = chart_value[int(x*dim + ind1) % dim, int(y*dim - ind2) % dim]
-        rel_value = rel_chart_value[int(x*dim + ind1) % dim, int(y*dim - ind2) % dim]
+        ind2 += dim * ((l * np.sin(2 * np.pi * k / n_h + np.pi/2) + n_t * np.clip(current[1] + m * uncert_cur_y, -1.0*max_cur, max_cur)) / (size * n_t ** 2))
+        value = chart_value[int(x*dim - ind1) % dim, int(y*dim + ind2) % dim]
+        rel_value = rel_chart_value[int(x*dim - ind1) % dim, int(y*dim + ind2) % dim]
         if value < -1 + 1e-6:
             return value, rel_value
 
@@ -56,7 +56,8 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
             if chart_value[int(dim*sub[0]), int(dim*sub[1])] > -1 + 1e-6:
                 place = True
 
-    water = data['water_c']
+    #water = data['water_c']
+    water = np.zeros((dim, dim, 2), dtype = np.float32) + 0.1
 
     pos = np.zeros((n_steps*n_t+1, 2), dtype=np.float32)
     pos_est = np.zeros((n_steps+1, 2), dtype=np.float32)
@@ -68,6 +69,7 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
     no_gps = []
     no_cur = []
     last_gps = 0
+    dead_rec = deepcopy(sub)
     action = (0.0, 0.0)
     done = False
     i = -1
@@ -77,14 +79,16 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
         values, rel_values = est_value(n_h, n_t, unc_pos, unc_cur, pos_est[i], dim, current_e, size, chart_value, rel_chart_value, uncert_cur, max_cur)
         v_est = rel_values[np.unravel_index(values.argmax(), values.shape)]
 
-        if (v_est < 2.0 - gps_cost and i != 0) or chart_value[int(pos_est[i, 0]*dim) % dim, int(pos_est[i, 1]*dim) % dim] > 1 - 1e-6:
+        if (v_est < 1.0 - gps_cost and i != 0) or chart_value[int(pos_est[i, 0]*dim) % dim, int(pos_est[i, 1]*dim) % dim] > 1 - 1e-6:
             print('GPS')
             no_measure = False
             unc_pos = 0.0
-            unc_cur = uncert_cur * last_gps + 0.001
+            unc_cur = uncert_cur * (last_gps + 1)
             last_gps = 0
-            current_e = sub - pos_est[i]
+            current_e = sub - dead_rec
+            print(sub, dead_rec)
             pos_est[i] = deepcopy(sub)
+            dead_rec = deepcopy(sub)
             if current_e[0] > 0.5:
                 current_e[0] -= 1.0
             elif current_e[0] < -0.5:
@@ -94,16 +98,17 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
             elif current_e[1] < -0.5:
                 current_e[1] += 1.0
 
-            current_e *= np.array([size, -1.0*size])
+            current_e *= np.array([-1.0*size, size])
+            print(water[int(sub[0]*dim), int(sub[1]*dim)], current_e)
         
             values, rel_values = est_value(n_h, n_t, unc_pos, unc_cur, pos_est[i], dim, current_e, size, chart_value, rel_chart_value, uncert_cur, max_cur)
             v_est = rel_values[np.unravel_index(values.argmax(), values.shape)]
    
-        if (v_est < 2.0 - cur_cost and i != 0):
+        if (v_est < 1.0 - cur_cost and i != 0):
             print('Current Profiler')
             no_measure = False
             current_e = water[int(sub[0]*dim), int(sub[1]*dim)]
-            unc_cur = 0.0
+            unc_cur = 0.0001
 
             values, rel_values = est_value(n_h, n_t, unc_pos, unc_cur, pos_est[i], dim, current_e, size, chart_value, rel_chart_value, uncert_cur, max_cur)
 
@@ -113,11 +118,12 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
             unc_pos += uncert_pos
             unc_cur += uncert_cur
 
-        action = np.unravel_index(values.argmax(), values.shape)
+        #action = np.unravel_index(values.argmax(), values.shape)
+        action = (0, 1)
         for m in range(n_t):
             current = water[int(sub[0]*dim), int(sub[1]*dim)]
-            sub[0] += (action[1] * np.cos(2 * np.pi * action[0] / n_h + np.pi / 2) + n_t * current[0]) / (size * n_t ** 2)
-            sub[1] -= (action[1] * np.sin(2 * np.pi * action[0] / n_h + np.pi / 2) + n_t * current[1]) / (size * n_t ** 2)
+            sub[0] -= ((action[1] * np.cos(2 * np.pi * action[0] / n_h + np.pi / 2)) + n_t * current[0]) / (size * n_t ** 2)
+            sub[1] += ((action[1] * np.sin(2 * np.pi * action[0] / n_h + np.pi / 2)) + n_t * current[1]) / (size * n_t ** 2)
             sub %= 1
             pos[i * n_t + m + 1] = deepcopy(sub)
             if chart_value[int(sub[0]*dim), int(sub[1]*dim)] < -1 + 1e-6:
@@ -125,11 +131,13 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
                 done = True
                 break
 
-        pos_est[i+1, 0] = pos_est[i, 0] + (action[1] * np.cos(2 * np.pi * action[0] / n_h + np.pi / 2) + n_t * current_e[0]) / (size * n_t)
-        pos_est[i+1, 1] = pos_est[i, 1] - (action[1] * np.sin(2 * np.pi * action[0] / n_h + np.pi / 2) + n_t * current_e[1]) / (size * n_t)
+        pos_est[i+1, 0] = pos_est[i, 0] - (action[1] * np.cos(2 * np.pi * action[0] / n_h + np.pi / 2) + n_t * current_e[0]) / (size * n_t)
+        pos_est[i+1, 1] = pos_est[i, 1] + (action[1] * np.sin(2 * np.pi * action[0] / n_h + np.pi / 2) + n_t * current_e[1]) / (size * n_t)
+        dead_rec[0] -= (action[1] * np.cos(2 * np.pi * action[0] / n_h + np.pi / 2)) / (size * n_t)
+        dead_rec[1] += (action[1] * np.sin(2 * np.pi * action[0] / n_h + np.pi / 2)) / (size * n_t)
         pos_est %= 1
 
-        print(i, v_est)
+        #print(i, chart_value[int(sub[0]*dim), int(sub[1]*dim)], v_est)
 
         if chart_value[int(sub[0]*dim), int(sub[1]*dim)] > 1 - 1e-6:
             print('Succeeded after %d steps.' % (i+1))
