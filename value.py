@@ -20,10 +20,10 @@ def gen_value(path, seed, dim, target_x, target_y, size, tol, n_h, n_t, discount
     for i in range(dim):
         for j in range(dim):
             if chart[i, j] >= -0.1:
-                chart_value[i, j] = 0
-                rel_chart_value[i, j] = 0
+                chart_value[i, j] = -99
+                rel_chart_value[i, j] = -99
 
-            elif np.sqrt(((i + 0.5)/dim - target[0])**2 + ((j + 0.5)/dim - target[1])**2) < 0.3/size:
+            elif np.sqrt(((i + 0.5)/dim - target[0])**2 + ((j + 0.5)/dim - target[1])**2) < 0.005*size:
                 chart_value[i, j] = 2
                 rel_chart_value[i, j] = 2
 
@@ -38,7 +38,7 @@ def gen_value(path, seed, dim, target_x, target_y, size, tol, n_h, n_t, discount
         old_rel_value = deepcopy(rel_chart_value)
         for i in range(dim):
             for j in range(dim):
-                if old_value[i, j] < 2.0 - 1e-6 and old_value[i, j] > 1e-6 and dif_chart[i, j] > 1e-6:
+                if old_value[i, j] < 2.0 - 1e-6 and old_value[i, j] > -99 + 1e-6 and dif_chart[i, j] > 1e-6:
                     values = np.zeros((n_h, n_t), dtype=np.float32)
                     rel_values = np.zeros((n_h, n_t), dtype=np.float32)
                     for k in range(n_h):
@@ -59,7 +59,7 @@ def gen_value(path, seed, dim, target_x, target_y, size, tol, n_h, n_t, discount
 
         dif_chart = abs(old_value - chart_value)
         dif = np.mean(dif_chart)
-        print(dif, np.mean(abs(old_rel_value - rel_chart_value)))
+        print(dif)
 
     chart_value -= 1
     rel_chart_value -= 1
