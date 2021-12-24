@@ -8,7 +8,7 @@ def sim_action(x, y, dim, n_h, n_t, action, current, size, chart_value, rel_char
     k = action[0]
     l = action[1]
     for m in range(n_t):
-        ind1 += dim * ((l * np.cos(2 * np.pi * k / n_h + np.pi/2) + n_t * np.clip(current[0] + m * uncert_cur_x, -1.0*max_cur, max_cur)) / (size * n_t ** 2))
+        ind1 += dim * ((l * np.cos(2 * np.pi * k / n_h + np.pi/2) - n_t * np.clip(current[0] + m * uncert_cur_x, -1.0*max_cur, max_cur)) / (size * n_t ** 2))
         ind2 += dim * ((l * np.sin(2 * np.pi * k / n_h + np.pi/2) + n_t * np.clip(current[1] + m * uncert_cur_y, -1.0*max_cur, max_cur)) / (size * n_t ** 2))
         value = chart_value[int(x*dim - ind1) % dim, int(y*dim + ind2) % dim]
         rel_value = rel_chart_value[int(x*dim - ind1) % dim, int(y*dim + ind2) % dim]
@@ -47,6 +47,8 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
     chart = data['chart']
     dim = chart.shape[0]
 
+    n_h = 32
+
     try:
         sub = np.array([sub_x, sub_y]) / dim
     except TypeError:
@@ -61,7 +63,8 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
     pos = np.zeros((n_steps*n_t+1, 2), dtype=np.float32)
     pos_est = np.zeros((n_steps+1, 2), dtype=np.float32)
     pos[0] = deepcopy(sub)
-    current_e = water[int(sub[0]*dim), int(sub[1]*dim)]
+    current_e = deepcopy(water[int(sub[0]*dim), int(sub[1]*dim)])
+    last_cur = deepcopy(water[int(sub[0]*dim), int(sub[1]*dim)])
     pos_est[0] = deepcopy(sub)
     unc_pos = 0.0
     unc_cur = 0.0
@@ -74,13 +77,11 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
     i = -1
     while not done:
         i += 1
-        no_measure = True
         values, rel_values = est_value(n_h, n_t, unc_pos, unc_cur, pos_est[i], dim, current_e, size, chart_value, rel_chart_value, uncert_cur, max_cur)
-        v_est = rel_values[np.unravel_index(values.argmax(), values.shape)]
+        v_est = rel_values[np.unravel_index(values.argmax(), values.shape)] - unc_pos - unc_cur
 
         if (v_est < 1.0 - gps_cost and i != 0) or chart_value[int(pos_est[i, 0]*dim) % dim, int(pos_est[i, 1]*dim) % dim] > 1 - 1e-6:
             print('GPS')
-            no_measure = False
             unc_pos = 0.0
             unc_cur = uncert_cur * (last_gps + 1)
             last_gps = 0
@@ -99,26 +100,36 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
             current_e *= np.array([-1.0*size, size])
         
             values, rel_values = est_value(n_h, n_t, unc_pos, unc_cur, pos_est[i], dim, current_e, size, chart_value, rel_chart_value, uncert_cur, max_cur)
-            v_est = rel_values[np.unravel_index(values.argmax(), values.shape)]
-   
+            v_est = rel_values[np.unravel_index(values.argmax(), values.shape)] - (unc_pos + unc_cur - uncert_cur) / 100.0
+
+            unc_cur -= uncert_cur
+        
+        else:
+            print('No GPS')
+            no_gps.append(i)
+            last_gps += 1
+            unc_pos += uncert_pos
+
+        #print(np.linalg.norm(water[int(sub[0]*dim), int(sub[1]*dim)]))
+
+        #if (v_est < 1.0 - cur_cost and i != 0) or (np.linalg.norm(water[int(sub[0]*dim), int(sub[1]*dim)] - last_cur) > 1):
         if (v_est < 1.0 - cur_cost and i != 0):
             print('Current Profiler')
-            no_measure = False
             current_e = water[int(sub[0]*dim), int(sub[1]*dim)]
             unc_cur = 0.0001
 
             values, rel_values = est_value(n_h, n_t, unc_pos, unc_cur, pos_est[i], dim, current_e, size, chart_value, rel_chart_value, uncert_cur, max_cur)
-
-        if no_measure:
-            print('No Measurement')
-            last_gps += 1
-            unc_pos += uncert_pos
+        
+        else:
+            print('No Current Profiler')
+            no_cur.append(i)
             unc_cur += uncert_cur
-
+            
+        last_cur = deepcopy(water[int(sub[0]*dim), int(sub[1]*dim)])
         action = np.unravel_index(values.argmax(), values.shape)
         for m in range(n_t):
             current = water[int(sub[0]*dim), int(sub[1]*dim)]
-            sub[0] -= ((action[1] * np.cos(2 * np.pi * action[0] / n_h + np.pi / 2)) + n_t * current[0]) / (size * n_t ** 2)
+            sub[0] -= ((action[1] * np.cos(2 * np.pi * action[0] / n_h + np.pi / 2)) - n_t * current[0]) / (size * n_t ** 2)
             sub[1] += ((action[1] * np.sin(2 * np.pi * action[0] / n_h + np.pi / 2)) + n_t * current[1]) / (size * n_t ** 2)
             sub %= 1
             pos[i * n_t + m + 1] = deepcopy(sub)
@@ -127,7 +138,7 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
                 done = True
                 break
 
-        pos_est[i+1, 0] = pos_est[i, 0] - (action[1] * np.cos(2 * np.pi * action[0] / n_h + np.pi / 2) + n_t * current_e[0]) / (size * n_t)
+        pos_est[i+1, 0] = pos_est[i, 0] - (action[1] * np.cos(2 * np.pi * action[0] / n_h + np.pi / 2) - n_t * current_e[0]) / (size * n_t)
         pos_est[i+1, 1] = pos_est[i, 1] + (action[1] * np.sin(2 * np.pi * action[0] / n_h + np.pi / 2) + n_t * current_e[1]) / (size * n_t)
         dead_rec[0] -= (action[1] * np.cos(2 * np.pi * action[0] / n_h + np.pi / 2)) / (size * n_t)
         dead_rec[1] += (action[1] * np.sin(2 * np.pi * action[0] / n_h + np.pi / 2)) / (size * n_t)

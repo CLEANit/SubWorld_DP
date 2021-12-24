@@ -59,7 +59,7 @@ _plot_axs.scatter(pos[:, 0][0::n_t]*dim, pos[:, 1][0::n_t]*dim, c='k', zorder=1)
 _plot_axs.scatter(pos[-1, 0]*dim, pos[-1, 1]*dim, c='k', zorder=1)
 if len(no_gps) > 0:
     _plot_axs.plot(pos_est[no_gps_line[1:], 0]*dim, pos_est[no_gps_line[1:], 1]*dim, c='g', zorder=10)
-    _plot_axs.scatter(pos_est[no_gps[1:], 0]*dim, pos_est[no_gps[1:], 1]*dim, c='g', s=15, zorder=10)
+    _plot_axs.scatter(pos_est[no_gps[1:], 0]*dim, pos_est[no_gps[1:], 1]*dim, c='g', zorder=10)
 _plot_axs.scatter([pos[0, 0]*dim], [pos[0, 1]*dim], c='w', zorder=1)
 _plot_axs.set_xticks([])
 _plot_axs.set_yticks([])
