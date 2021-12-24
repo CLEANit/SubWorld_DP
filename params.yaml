@@ -1,10 +1,11 @@
 # Yaml file for SubWorld_DP
 
 # Parameters for chart generation
-seed: 25252531
+seed: 45
 dim: 152
-n_islands: 20
-max_islands: 20
+n_islands: None
+min_islands: 8
+max_islands: 12
 size: 10.0
 min_height: 0.9
 max_height: 2.0
@@ -24,14 +25,14 @@ tol: -6
 
 # Extra parameters for many chart/value generations
 n_cpu: 4
-maps_i: 25252525
-maps_f: 25252550
+maps_i: 50
+maps_f: 100
 
 # Parameters for GPS policy generation
 sub_x: None
 sub_y: None
-n_steps: 50
-gps_cost: 0.0
-cur_cost: 0.0
-uncert_pos: 0.1
-uncert_cur: 0.1
+n_steps: 20
+gps_cost: 0.45
+cur_cost: 0.01
+uncert_pos: 0.2
+uncert_cur: 0.2

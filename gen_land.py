@@ -12,8 +12,9 @@ seed = params['seed']
 dim = params['dim']
 n_islands = params['n_islands']
 if n_islands == 'None':
+    min_islands = params['min_islands']
     max_islands = params['max_islands']
-    n_islands = np.clip(np.random.normal(0.6*max_islands, 0.25*max_islands), 0, max_islands).astype(np.int32)
+    n_islands = np.clip(np.random.normal(0.6*max_islands, 0.25*max_islands), min_islands, max_islands).astype(np.int32)
 
 size = params['size']
 min_height = params['min_height']
