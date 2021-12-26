@@ -79,7 +79,6 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
         v_est = rel_values[np.unravel_index(values.argmax(), values.shape)] - unc_pos - unc_cur
 
         if (v_est < 1.0 - gps_cost and i != 0) or chart_value[int(pos_est[i, 0]*dim) % dim, int(pos_est[i, 1]*dim) % dim] > 1 - 1e-6:
-            print('GPS')
             unc_pos = 0.0
             unc_cur = uncert_cur * (last_gps + 1)
             last_gps = 0
@@ -103,27 +102,20 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
             unc_cur -= uncert_cur
         
         else:
-            print('No GPS')
             no_gps.append(i)
             last_gps += 1
             unc_pos += uncert_pos
 
-        #print(np.linalg.norm(water[int(sub[0]*dim), int(sub[1]*dim)]))
-
-        #if (v_est < 1.0 - cur_cost and i != 0) or (np.linalg.norm(water[int(sub[0]*dim), int(sub[1]*dim)] - last_cur) > 1):
         if (v_est < 1.0 - cur_cost and i != 0):
-            print('Current Profiler')
             current_e = water[int(sub[0]*dim), int(sub[1]*dim)]
             unc_cur = 0.0001
 
             values, rel_values = est_value(n_h, n_t, unc_pos, unc_cur, pos_est[i], dim, current_e, size, chart_value, rel_chart_value, uncert_cur, max_cur)
         
         else:
-            print('No Current Profiler')
             no_cur.append(i)
             unc_cur += uncert_cur
             
-        last_cur = deepcopy(water[int(sub[0]*dim), int(sub[1]*dim)])
         action = np.unravel_index(values.argmax(), values.shape)
         for m in range(n_t):
             current = water[int(sub[0]*dim), int(sub[1]*dim)]
@@ -132,7 +124,6 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
             sub %= 1
             pos[i * n_t + m + 1] = deepcopy(sub)
             if chart_value[int(sub[0]*dim), int(sub[1]*dim)] < -1 + 1e-6:
-                print('Crashed after %d steps.' % (i+1))
                 done = True
                 status = 0
                 break
@@ -144,12 +135,10 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
         pos_est %= 1
 
         if chart_value[int(sub[0]*dim), int(sub[1]*dim)] > 1 - 1e-6:
-            print('Succeeded after %d steps.' % (i+1))
             done = True
             status = 1
 
         elif i+1 >= n_steps:
-            print('Finished after %d steps.' % (i+1))
             done = True
             status = 2
 
