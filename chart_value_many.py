@@ -24,8 +24,8 @@ def start():
     print('Starting', multiprocessing.current_process().name)
 
 def save_value(seed, path, dim, size, tol, n_h, n_t, discount):
-    chart_value, steps = gen_value(path, seed, dim, None, None, size, tol, n_h, n_t, discount)
-    np.savez(path + '/data/value/value_' + str(seed) + '.npz', value = chart_value, steps = steps, discount = discount)
+    chart_value, rel_chart_value = gen_value(path, seed, dim, None, None, size, tol, n_h, n_t, discount)
+    np.savez(path + '/data/value/value_' + str(seed) + '.npz', value = chart_value, rel_value = rel_chart_value, discount = discount)
 
 if __name__ == "__main__":
     pool = multiprocessing.Pool(processes = n_cpu, initializer=start)
