@@ -46,9 +46,7 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
     data = np.load(path + '/data/charts/charts_' + str(seed) + '.npz')
     chart = data['chart']
     dim = chart.shape[0]
-
-    n_h = 32
-
+    
     try:
         sub = np.array([sub_x, sub_y]) / dim
     except TypeError:
@@ -136,6 +134,7 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
             if chart_value[int(sub[0]*dim), int(sub[1]*dim)] < -1 + 1e-6:
                 print('Crashed after %d steps.' % (i+1))
                 done = True
+                status = 0
                 break
 
         pos_est[i+1, 0] = pos_est[i, 0] - (action[1] * np.cos(2 * np.pi * action[0] / n_h + np.pi / 2) - n_t * current_e[0]) / (size * n_t)
@@ -147,9 +146,11 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
         if chart_value[int(sub[0]*dim), int(sub[1]*dim)] > 1 - 1e-6:
             print('Succeeded after %d steps.' % (i+1))
             done = True
+            status = 1
 
         elif i+1 >= n_steps:
             print('Finished after %d steps.' % (i+1))
             done = True
+            status = 2
 
-    return pos, pos_est, i, no_gps, no_cur
+    return pos, pos_est, i, no_gps, no_cur, status
