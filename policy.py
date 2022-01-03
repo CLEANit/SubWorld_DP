@@ -62,7 +62,6 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
     pos_est = np.zeros((n_steps+1, 2), dtype=np.float32)
     pos[0] = deepcopy(sub)
     current_e = deepcopy(water[int(sub[0]*dim), int(sub[1]*dim)])
-    last_cur = deepcopy(water[int(sub[0]*dim), int(sub[1]*dim)])
     pos_est[0] = deepcopy(sub)
     unc_pos = 0.0
     unc_cur = 0.0
