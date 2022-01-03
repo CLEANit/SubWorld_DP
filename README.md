@@ -6,6 +6,17 @@ This repository conatins the code required to create SubWorld:
 - Value functions
 - Policies
 
+If you use this work, please cite
+
+```bibtex
+@article{beeler2021dynamic,
+  title={Dynamic programming with partial information to overcome navigational uncertainty in a nautical environment},
+  author={Beeler, Chris and Li, Xinkai and Fraser, Maia and Crowley, Mark and Tamblyn, Isaac},
+  journal={arXiv preprint arXiv:2112.14657},
+  year={2021}
+}
+```
+
 ## Generating Charts
 
 Running **gen_land.py** will generate a single chart with water currents stored in **data/charts/charts_SEED.npz**. Running **gen_land_many.py** will generate many charts with water currents stored in **data/charts/charts_SEED.npz**. These charts are generated in parallel using **multiprocessing**.
