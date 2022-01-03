@@ -1,6 +1,6 @@
 # SubWorld Dynamic Programming
 
-This repository conatins the code required to create SubWorld:
+This repository conatins the code required to create dynamic programming based SubWorld:
 - Charts
 - Water currents
 - Value functions
