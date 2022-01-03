@@ -24,11 +24,9 @@ The value functions can be visualized using **plot_value.py**.
 
 ## Generating Policies
 
-Running **chart_policy_gps.py** will generate a policy based on the value function. The policy's trajectectory will be stored in **data/policy/policy_GPS_SEED.npz**.
+Running **chart_policy_gps.py** will generate a policy based on the value function. The policy's trajectectory will be stored in **data/policy/policy_gps_SEED.npz**. Running **chart_policy_many.py** will generate policies for each value function from **chart_value_many.py** stored in **data/policy/policy_gps_SEED.npz**.
 
 The policy trajectories can be visualized using **plot_policy.py**.
-
-
 
 ## YAML Parameters
 
@@ -41,6 +39,7 @@ The parameters used in each task are stored in **params.yaml**. Some parameters 
 |seed        |Non-negative **int** |The random seed used create the islands that define the chart. |
 |dim         |Positive **int** |The dimension size of the chart. |
 |n_islands   |Non-negative **int** or **None**| The number of islands that will be generated. Setting **None** will result in a random number of islands. |
+|min_islands |Non-negative **int** |The minimum number of islands that will be generated if **n_islands** is **None**. |
 |max_islands |Non-negative **int** |The maximum number of islands that will be generated if **n_islands** is **None**. |
 |size        |Non-negative **float** |The size of the x and y dimensions of the chart. The Submarine can move up to 1 unit per action. |
 |min_height  |Non-negative **float** |The minimum height of each island. |
@@ -77,6 +76,7 @@ The parameters used in each task are stored in **params.yaml**. Some parameters 
 |sub_x       |Non-negative **float** < dim or **None**|The x coordinate for the submarine's starting position. Setting **None** will result in a random coordinate. |
 |sub_y       |Non-negative **float** < dim or **None**|The y coordinate for the submarine's starting position. Setting **None** will result in a random coordinate. |
 |n_steps     |Positive **int** |The maximum number of steps the agent can take before the episode ending. |
-|gps_cost    |Non-negative **float** < 2 |The cost required to use the GPS. If set to zero, the GPS will be used at every step. If set 2.0, the GPS will never be used. |
-|uncert_i    |Non-negative **float** |The uncertainty in water current/position after the GPS is used. |
-|uncert_inc  |Non-negative **float** |The rate the uncertainty increases after each step the GPS is not used. |
+|gps_cost    |Non-negative **float** |The cost required to use the GPS. If set to zero, the GPS will be used at every step. |
+|cur_cost    |Non-negative **float** |The cost required to use the Current Profiler. If set to zero, the Current Profiler will be used at every step. |
+|uncert_pos  |Non-negative **float** |The rate at which uncertainty in position increases. |
+|uncert_cur  |Non-negative **float** |The rate at which uncertainty in water current increases. |
