@@ -1,5 +1,7 @@
 # SubWorld Dynamic Programming
 
+The goal of this project is to solve the semi-controlled sensing POMDP SubWorld (more officially referred to as our Nautical Navigation Environment). This environment is a semi-controlled sensing problem because it contains both tradition state-modifying actions in typical POMDPs and non-state modifying information revealing measurement actions in controlled sensing POMDPs.
+
 This repository conatins the code required to create dynamic programming based SubWorld:
 - Charts
 - Water currents
@@ -17,8 +19,6 @@ If you use this work, please cite
 }
 ```
 
-The goal of this project is to solve the semi-controlled sensing POMDP SubWorld (more officially referred to as a Nautical Navigation Environment). This environment is a semi-controlled sensing problem because it contains both tradition state-modifying actions in typical POMDPs and non-state modifying information revealing measurement actions in controlled sensing POMDPs.
-
 # Released Versions
 
 For specific versions used in published (or submitted) papers, please view the other existing branches.
@@ -26,6 +26,11 @@ For specific versions used in published (or submitted) papers, please view the o
 |Version |Paper   |
 |--------|--------|
 |v1.0    |[Beeler, Chris, et al. "Dynamic programming with partial information to overcome navigational uncertainty in a nautical environment." arXiv preprint arXiv:2112.14657 (2021).](https://arxiv.org/abs/2112.14657) |
+
+## Installation:
+```bash
+pip install ./
+```
 
 ## Generating Charts
 
