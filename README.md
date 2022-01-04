@@ -74,14 +74,6 @@ The parameters used in each task are stored in **params.yaml**. Some parameters 
 |n_h         |Positive **int** |The number of discritized heading actions. |
 |tol         |**float** |Log base 10 of the convergence tolerence used in Bellman's dynamic programming algorithm. I.e. tol=-6 -> a tolerence of 1e-6.|
 
-### Extra Paramters for Parallelization
-
-|Parameter   |Type        |Description |
-|------------|------------|------------|
-|n_cpu       |Positive **int** |The number of CPUs used in **multiprocessing.Pool** when generating many charts/value functions. |
-|maps_i      |Non-negative **int** |The seed to start at when generating many charts. |
-|maps_f      |Positive **int** > maps_i |The seed to end at when generating many charts.
-
 ### Policy Generation
 
 |Parameter   |Type        |Description |
@@ -93,3 +85,11 @@ The parameters used in each task are stored in **params.yaml**. Some parameters 
 |cur_cost    |Non-negative **float** |The cost required to use the Current Profiler. If set to zero, the Current Profiler will be used at every step. |
 |uncert_pos  |Non-negative **float** |The rate at which uncertainty in position increases. |
 |uncert_cur  |Non-negative **float** |The rate at which uncertainty in water current increases. |
+
+### Extra Paramters for Parallelization
+
+|Parameter   |Type        |Description |
+|------------|------------|------------|
+|n_cpu       |Positive **int** |The number of CPUs used in **multiprocessing.Pool** when generating many charts/value functions. |
+|maps_i      |Non-negative **int** |The seed to start at when generating many charts. |
+|maps_f      |Positive **int** > maps_i |The seed to end at when generating many charts.
