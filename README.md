@@ -85,6 +85,7 @@ The parameters used in each task are stored in **params.yaml**. Some parameters 
 |cur_cost    |Non-negative **float** |The cost required to use the Current Profiler. If set to zero, the Current Profiler will be used at every step. |
 |uncert_pos  |Non-negative **float** |The rate at which uncertainty in position increases. |
 |uncert_cur  |Non-negative **float** |The rate at which uncertainty in water current increases. |
+|uncert_res  |Positive **int** |The number of trajectories simulated for each axis of uncertainty, (x, y) for both position and water current, per action estimate. I.e. uncert_res=3 -> 81 trajectories simulated per action estimate. |
 
 ### Extra Paramters for Parallelization
 

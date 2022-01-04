@@ -23,15 +23,15 @@ def sim_action(x, y, dim, n_h, n_t, action, current, size, chart_value, rel_char
     return value, rel_value
 
 # Function to estimate the values and costs of each action using sim_action
-def est_value(n_h, n_t, unc_pos, unc_cur, pos_est, dim, current_e, size, chart_value, rel_chart_value, uncert_cur, max_cur):
+def est_value(n_h, n_t, unc_pos, unc_cur, pos_est, dim, current_e, size, chart_value, rel_chart_value, uncert_cur, max_cur, uncert_res):
     values = np.zeros((n_h, n_t), dtype=np.float32) - 1
     rel_values = np.zeros((n_h, n_t), dtype=np.float32) - 1
     # Create a range of positions to simulate in uncertainty
-    uncert_pos_x = np.linspace(-1.0 * unc_pos, unc_pos, 3, endpoint = True)
-    uncert_pos_y = np.linspace(-1.0 * unc_pos, unc_pos, 3, endpoint = True)
+    uncert_pos_x = np.linspace(-1.0 * unc_pos, unc_pos, uncert_res, endpoint = True)
+    uncert_pos_y = np.linspace(-1.0 * unc_pos, unc_pos, uncert_res, endpoint = True)
     # Create a range of water currents to simulate in uncertainty
-    uncert_cur_x = np.linspace(-1.0 * unc_cur, unc_cur, 3, endpoint = True)
-    uncert_cur_y = np.linspace(-1.0 * unc_cur, unc_cur, 3, endpoint = True)
+    uncert_cur_x = np.linspace(-1.0 * unc_cur, unc_cur, uncert_res, endpoint = True)
+    uncert_cur_y = np.linspace(-1.0 * unc_cur, unc_cur, uncert_res, endpoint = True)
     # Loop over heading actions
     for k in range(n_h):
         # Loop over throttle actions
@@ -54,7 +54,7 @@ def est_value(n_h, n_t, unc_pos, unc_cur, pos_est, dim, current_e, size, chart_v
     return values, rel_values
 
 # Function to generate a policy trajectory using est_value
-def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gps_cost, cur_cost, uncert_cur, max_cur):
+def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gps_cost, cur_cost, uncert_cur, max_cur, uncert_res):
     # Load the value and cost functions
     data1 = np.load(path + '/data/value/value_' + str(seed) + '.npz')
     chart_value = data1['value']
@@ -95,7 +95,7 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
     while not done:
         i += 1
         # Get values and costs for all actions
-        values, rel_values = est_value(n_h, n_t, unc_pos, unc_cur, pos_est[i], dim, current_e, size, chart_value, rel_chart_value, uncert_cur, max_cur)
+        values, rel_values = est_value(n_h, n_t, unc_pos, unc_cur, pos_est[i], dim, current_e, size, chart_value, rel_chart_value, uncert_cur, max_cur, uncert_res)
         v_est = rel_values[np.unravel_index(values.argmax(), values.shape)] - unc_pos - unc_cur
 
         # Determine if GPS measurement should be taken
@@ -122,7 +122,7 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
             current_e *= np.array([-1.0*size, size])
 
             # Get values and costs for all actions after measurement
-            values, rel_values = est_value(n_h, n_t, unc_pos, unc_cur, pos_est[i], dim, current_e, size, chart_value, rel_chart_value, uncert_cur, max_cur)
+            values, rel_values = est_value(n_h, n_t, unc_pos, unc_cur, pos_est[i], dim, current_e, size, chart_value, rel_chart_value, uncert_cur, max_cur, uncert_res)
             v_est = rel_values[np.unravel_index(values.argmax(), values.shape)] - (unc_pos + unc_cur - uncert_cur) / 100.0
 
             unc_cur -= uncert_cur
@@ -141,7 +141,7 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
             unc_cur = 0.0001
 
             # Get values and costs for all actions after measurement
-            values, rel_values = est_value(n_h, n_t, unc_pos, unc_cur, pos_est[i], dim, current_e, size, chart_value, rel_chart_value, uncert_cur, max_cur)
+            values, rel_values = est_value(n_h, n_t, unc_pos, unc_cur, pos_est[i], dim, current_e, size, chart_value, rel_chart_value, uncert_cur, max_cur, uncert_res)
         
         else:
             # Increase uncertainty if current profiler measurement not taken

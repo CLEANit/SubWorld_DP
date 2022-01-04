@@ -36,3 +36,4 @@ gps_cost: 0.45
 cur_cost: 0.01
 uncert_pos: 0.2
 uncert_cur: 0.2
+uncert_res: 3
