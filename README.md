@@ -1,6 +1,6 @@
 # SubWorld Dynamic Programming
 
-The goal of this project is to solve the semi-controlled sensing POMDP SubWorld (more officially referred to as our Nautical Navigation Environment). This environment is a semi-controlled sensing problem because it contains both tradition state-modifying actions in typical POMDPs and non-state modifying information revealing measurement actions in controlled sensing POMDPs.
+The goal of this project is to solve the semi-controlled sensing POMDP SubWorld (more officially referred to as our Nautical Navigation Environment). This environment is a semi-controlled sensing problem because it contains both traditional state-modifying actions in typical POMDPs and non-state modifying information revealing measurement actions in controlled sensing POMDPs.
 
 This repository conatins the code required to create dynamic programming based SubWorld:
 - Charts
