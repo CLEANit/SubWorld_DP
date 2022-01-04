@@ -11,13 +11,21 @@ If you use this work, please cite
 ```bibtex
 @article{beeler2021dynamic,
   title={Dynamic programming with partial information to overcome navigational uncertainty in a nautical environment},
-  author={Beeler, Chris and Li, Xinkai and Fraser, Maia and Crowley, Mark and Tamblyn, Isaac},
+  author={Beeler, Chris and Li, Xinkai and Crowley, Mark and Fraser, Maia and Tamblyn, Isaac},
   journal={arXiv preprint arXiv:2112.14657},
   year={2021}
 }
 ```
 
 The goal of this project is to solve the semi-controlled sensing POMDP SubWorld (more officially referred to as a Nautical Navigation Environment). This environment is a semi-controlled sensing problem because it contains both tradition state-modifying actions in typical POMDPs and non-state modifying information revealing measurement actions in controlled sensing POMDPs.
+
+# Released Versions
+
+For specific versions used in published (or submitted) papers, please view the other existing branches.
+
+|Version |Paper   |
+|--------|--------|
+|v1.0    |[Beeler, Chris, et al. "Dynamic programming with partial information to overcome navigational uncertainty in a nautical environment." arXiv preprint arXiv:2112.14657 (2021).](https://arxiv.org/abs/2112.14657) |
 
 ## Generating Charts
 
