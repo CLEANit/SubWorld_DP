@@ -6,7 +6,7 @@ This repository conatins the code required to create dynamic programming based S
 - Value functions
 - Policies
 
-This version of the code is the one used in the paper "Dynamic programming with partial information to overcome navigational uncertainty in a nautical environment". If you use this work, please cite
+This version of the code is the one used in the paper [Beeler, Chris, et al. "Dynamic programming with partial information to overcome navigational uncertainty in a nautical environment." arXiv preprint arXiv:2112.14657 (2021).](https://arxiv.org/abs/2112.14657) If you use this work, please cite
 
 ```bibtex
 @article{beeler2021dynamic,
