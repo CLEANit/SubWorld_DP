@@ -8,7 +8,7 @@ setup(name='subworld-dp',
           'cmocean',
           'pyyaml',
       ],
-      description='Implementation of dynamic programming to solve the POMDP SubWorld.',
+      description='Implementation of dynamic programming with uncertainty to solve the semi-controlled sensing POMDP SubWorld.',
       author='Chris Beeler',
       url='https://github.com/CLEANit/SubWorld_DP',
-      version='0.0')
+      version='1.0')

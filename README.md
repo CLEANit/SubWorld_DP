@@ -17,6 +17,8 @@ If you use this work, please cite
 }
 ```
 
+The goal of this project is to solve the semi-controlled sensing POMDP SubWorld (more officially referred to as a Nautical Navigation Environment). This environment is a semi-controlled sensing problem because it contains both tradition state-modifying actions in typical POMDPs and non-state modifying information revealing measurement actions in controlled sensing POMDPs.
+
 ## Generating Charts
 
 Running **gen_land.py** will generate a single chart with water currents stored in **data/charts/charts_SEED.npz**. Running **gen_land_many.py** will generate many charts with water currents stored in **data/charts/charts_SEED.npz**. These charts are generated in parallel using **multiprocessing**.
