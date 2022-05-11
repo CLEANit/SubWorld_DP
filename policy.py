@@ -76,6 +76,7 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
 
     # Load the water current
     water = cur_scale*data['water_c']
+    max_cur *= cur_scale
     
     pos = np.zeros((n_steps*n_t+1, 2), dtype=np.float32)
     pos_est = np.zeros((n_steps+1, 2), dtype=np.float32)
