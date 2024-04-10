@@ -21,6 +21,8 @@ If you use this work, please cite
 }
 ```
 
+Additional information for the above manuscript can be found [here](./PDFs/Beeler_CanAI_SI.pdf).
+
 # Released Versions
 
 For specific versions used in published (or submitted) papers, please view the other existing branches.
