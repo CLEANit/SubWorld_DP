@@ -10,12 +10,13 @@ with open(path + '/params.yaml', 'r') as F:
     params = yaml.safe_load(F)
 
 seed = params['seed']
+cur_scale = params['cur_scale']
 
 data = np.load(path + '/data/charts/charts_' + str(seed) + '.npz', allow_pickle=True)
 chart = data['chart']
 dim = chart.shape[0]
 water_p = np.meshgrid(np.arange(0, dim, 3), np.arange(0, dim, 3))
-current = data['water_c']
+current = cur_scale*data['water_c']
 water_c = current[0::3, 0::3]
 
 _plot_fig, _plot_axs = plt.subplots(1, 1, figsize=(8, 8))

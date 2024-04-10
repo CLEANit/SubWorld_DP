@@ -14,19 +14,20 @@ x_decay_max: 3.0
 y_decay_min: 1.5
 y_decay_max: 3.0
 max_cur: 0.5
+cur_scale: 0.5
 
 # Parameters for value function generation
-target_x: 49
-target_y: 103
+target_x: None
+target_y: None
 discount: 0.9
 n_t: 5
 n_h: 16
 tol: -6
 
 # Extra parameters for many chart/value generations
-n_cpu: 48
+n_cpu: 2
 maps_i: 0
-maps_f: 150
+maps_f: 2
 
 # Parameters for GPS policy generation
 sub_x: None

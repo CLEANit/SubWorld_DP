@@ -11,13 +11,17 @@ This repository conatins the code required to create dynamic programming based S
 If you use this work, please cite
 
 ```bibtex
-@article{beeler2021dynamic,
-  title={Dynamic programming with partial information to overcome navigational uncertainty in a nautical environment},
-  author={Beeler, Chris and Li, Xinkai and Crowley, Mark and Fraser, Maia and Tamblyn, Isaac},
-  journal={arXiv preprint arXiv:2112.14657},
-  year={2021}
+@article{beeler2024dynamic,
+  author = {Beeler, Chris and Li, Xinkai and Bellinger, Colin and Crowley, Mark and Fraser, Maia and Tamblyn, Isaac},
+  journal = {arXiv preprint arXiv:2112.14657},
+  year = {2024},
+  month = {May 27},
+  publisher = {Canadian Artificial Intelligence Association (CAIAC)},
+  title={Dynamic programming with incomplete information to overcome navigational uncertainty in POMDPs},
 }
 ```
+
+Additional information for the above manuscript can be found [here](./PDFs/Beeler_CanAI_SI.pdf).
 
 # Released Versions
 

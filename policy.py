@@ -54,7 +54,7 @@ def est_value(n_h, n_t, unc_pos, unc_cur, pos_est, dim, current_e, size, chart_v
     return values, rel_values
 
 # Function to generate a policy trajectory using est_value
-def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gps_cost, cur_cost, uncert_cur, max_cur, uncert_res):
+def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gps_cost, cur_cost, uncert_cur, max_cur, cur_scale, uncert_res):
     # Load the value and cost functions
     data1 = np.load(path + '/data/value/value_' + str(seed) + '.npz')
     chart_value = data1['value']
@@ -75,7 +75,8 @@ def policy_gps(path, seed, sub_x, sub_y, n_steps, n_t, uncert_pos, n_h, size, gp
                 place = True
 
     # Load the water current
-    water = data['water_c']
+    water = cur_scale*data['water_c']
+    max_cur *= cur_scale
     
     pos = np.zeros((n_steps*n_t+1, 2), dtype=np.float32)
     pos_est = np.zeros((n_steps+1, 2), dtype=np.float32)

@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-setup(name='subworld-dp',
+setup(name='subworlddp',
       packages=find_packages(),
       install_requires=[
           'numpy',

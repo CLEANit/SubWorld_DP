@@ -11,13 +11,14 @@ with open(path + '/params.yaml', 'r') as F:
 
 seed = params['seed']
 n_t = params['n_t']
+cur_scale = params['cur_scale']
 
 data = np.load(path + '/data/charts/charts_' + str(seed) + '.npz', allow_pickle=True)
 chart = data['chart']
 dim = chart.shape[0]
 water_p = np.meshgrid(np.arange(0, dim, 3), np.arange(0, dim, 3))
 current = data['water_c']
-water_c = current[0::3, 0::3]
+water_c = cur_scale*current[0::3, 0::3]
 data1 = np.load(path + '/data/policy/policy_gps_' + str(seed) + '.npz')
 pos = data1['pos']
 pos_est = data1['pos_est']
