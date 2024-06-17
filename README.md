@@ -11,13 +11,14 @@ This repository conatins the code required to create dynamic programming based S
 If you use this work, please cite
 
 ```bibtex
-@article{beeler2024dynamic,
-  author = {Beeler, Chris and Li, Xinkai and Bellinger, Colin and Crowley, Mark and Fraser, Maia and Tamblyn, Isaac},
-  journal = {arXiv preprint arXiv:2112.14657},
-  year = {2024},
-  month = {May 27},
-  publisher = {Canadian Artificial Intelligence Association (CAIAC)},
-  title={Dynamic programming with incomplete information to overcome navigational uncertainty in POMDPs},
+@article{Beeler2024Dynamic,
+	author = {Beeler, Chris and Li, Xinkai and Bellinger, Colin and Crowley, Mark and Fraser, Maia and Tamblyn, Isaac},
+	journal = {Proceedings of the Canadian Conference on Artificial Intelligence},
+	year = {2024},
+	month = {may 27},
+	note = {https://caiac.pubpub.org/pub/qdmqsaj7},
+	publisher = {Canadian Artificial Intelligence Association (CAIAC)},
+	title = {Dynamic programming with incomplete information to overcomenavigational uncertainty in {POMDPs}},
 }
 ```
 
@@ -29,7 +30,7 @@ For specific versions used in published (or submitted) papers, please view the o
 
 |Version |Paper   |
 |--------|--------|
-|v1.0    |[Beeler, Chris, et al. "Dynamic programming with partial information to overcome navigational uncertainty in a nautical environment." arXiv preprint arXiv:2112.14657 (2021).](https://arxiv.org/abs/2112.14657) |
+|v1.0    |[Beeler, Chris, et al. "Dynamic programming with incomplete information to overcomenavigational uncertainty in POMDPs." Proceedings of the Canadian Conference on Artificial Intelligence (2024).](https://caiac.pubpub.org/pub/qdmqsaj7/release/1) |
 
 ## Installation:
 ```bash
